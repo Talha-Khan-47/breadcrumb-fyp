@@ -37,7 +37,7 @@ owns/disposes its source, including one injected for testing. This screen never 
 permissions. Teammate 3 must wire it into the app after external permission grant:
 
 ```text
-adb shell pm grant com.teamgroza.breadcrumb android.permission.ACTIVITY_RECOGNITION
+adb shell pm grant com.fyp.indoornav android.permission.ACTIVITY_RECOGNITION
 ```
 
 This spike supports D15's real live recording. It does not implement MapBuilder or
@@ -231,5 +231,5 @@ allowed paths and was NOT edited; its owner can use TraceReplayData.parse(conten
 scripts should likewise use .timing rather than every record's t.
 
 Phone verification is still required. Compile/unit results do not establish that
-the iQOO driver delivers the final far callback. Cover/uncover with marks, leave
+the test phone driver delivers the final far callback. Cover/uncover with marks, leave
 time for the returned far before Stop, and inspect cm/maximumRange/near/origin.

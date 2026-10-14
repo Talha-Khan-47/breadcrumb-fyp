@@ -152,7 +152,7 @@ class SpeechInput {
   /// The languages the on-device recogniser supports, like `en_IN`. On Android
   /// 13+ with the microphone permission, speech_to_text lists the on-device
   /// languages; it never answers when there is no on-device recogniser, hence
-  /// the timeout and the empty list. Supported is not installed: on the iQOO
+  /// the timeout and the empty list. Supported is not installed: on the test phone
   /// en_IN and hi_IN are listed while their packs are missing, and listening
   /// then fails with `error_language_unavailable` (see [describeSpeechError]).
   Future<List<String>> offlineLocales({

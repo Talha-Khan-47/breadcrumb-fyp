@@ -1,21 +1,5 @@
-@AGENTS.md
+# Repository notes
 
-## Claude Code notes (Ifzal, captain)
-
-- Use Sonnet by default. Use `/model opusplan` for design work (Opus plans, Sonnet
-  executes). Use Opus only for hard debugging. Don't use Fable here: on Pro it bills
-  outside plan limits.
-- Use plan mode (`Shift+Tab`) for anything that touches more than two files. Edit the
-  plan before approving it.
-- One task per session. When it's done, add the handoff at the top of
-  `docs/status/ifzal.md`, then `/clear`.
-- Use subagents for exploring package docs or reading many files, so the main context
-  stays clean.
-- To review a teammate's pull request before merging, use a fresh subagent: "Review
-  this diff against `docs/CONTRACTS.md` and `AGENTS.md`. Report only contract breaks,
-  ownership violations or missing tests, not style."
-- Before every Red Light, start `claude remote-control` in the repo so the session can
-  be steered from the Claude app. It needs the Pro login; it does not work with
-  OpenRouter or any `ANTHROPIC_BASE_URL` gateway.
-- When compacting, always keep the list of modified files, failing tests, the next
-  step, and any decision not yet written to `docs/DECISIONS.md`.
+Read README.md, docs/CONTRACTS.md and docs/DESIGN_DECISIONS.md before changing navigation behavior.
+Keep runtime processing offline, core Dart modules independent of Flutter, and thresholds in lib/core/tuning.dart.
+Preserve native channel names and packages. Run analysis and tests when Flutter is available.

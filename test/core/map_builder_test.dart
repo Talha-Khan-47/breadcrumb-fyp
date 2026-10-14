@@ -47,8 +47,8 @@ void main() {
     },
   );
 
-  test('D25: the turns walked on the iQOO loop snap to right angles', () {
-    final builder = MapBuilder()..start('team groza table');
+  test('D25: the turns walked on the test phone loop snap to right angles', () {
+    final builder = MapBuilder()..start('project lab table');
     for (final angle in [-63.0, 108.0, -60.0, -78.0, 75.0, 66.0]) {
       walk(builder, 3);
       builder.onTurn(contracts.TurnEvent(100, angle));

@@ -11,6 +11,7 @@ import 'package:flutter_edge_ai_litertlm/flutter_edge_ai_litertlm.dart';
 import 'package:path_provider/path_provider.dart';
 
 import '../core/contracts.dart';
+import '../core/tuning.dart';
 import 'alias_suggester.dart';
 import 'destination_resolver.dart';
 
@@ -76,6 +77,7 @@ class GemmaService implements PlaceChooser, AliasModel {
   /// Registers the model file, loads it (GPU first, CPU if that fails) and
   /// warms it up once. Throws if no path or backend works.
   Future<GemmaLoadReport> load() async {
+    if (!enableOnDeviceAi) throw StateError('On-device AI disabled for this build');
     final notes = <String>[];
     final watch = Stopwatch()..start();
     await FlutterEdgeAi.initialize(inferenceEngines: [LiteRtLmEngine()]);

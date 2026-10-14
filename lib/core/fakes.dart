@@ -349,7 +349,7 @@ class FakeSensingSource implements SensingSource {
   Stream<PlacementEvent> placements() =>
       Stream.value(const PlacementEvent(Placement.hand, 0));
 
-  /// A 12 GB phone, like the iQOO 15 (D29).
+  /// A 12 GB phone, like the test phone 15 (D29).
   @override
   Future<int> totalRamMb() async => 12000;
 }

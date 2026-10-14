@@ -45,7 +45,7 @@ class _PermissionsScreenState extends State<PermissionsScreen> {
         setState(() {
           _checking = false;
           _error =
-              'Breadcrumb needs Microphone and Activity Recognition permissions to work. Please grant them in Settings.';
+              'IndoorNav needs Microphone and Activity Recognition permissions to work. Please grant them in Settings.';
         });
       }
     } catch (e) {

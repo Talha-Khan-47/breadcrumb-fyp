@@ -1,6 +1,13 @@
 /// Every threshold in the app. Starting guesses from `docs/CONTRACTS.md`; retune them
-/// with recorded traces. Only the captain changes this file.
+/// with recorded traces.
 library;
+
+/// Build switches; retained AI code is disabled for the FYP release.
+abstract final class Tuning {
+  static const bool enableOnDeviceAi = false;
+}
+
+const bool enableOnDeviceAi = Tuning.enableOnDeviceAi;
 
 /// deg/s above which the phone is turning.
 const double turnRateMin = 15;

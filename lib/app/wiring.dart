@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:breadcrumb/ai/destination_resolver.dart';
 import 'package:breadcrumb/ai/device_tier.dart';
 import 'package:breadcrumb/ai/gemma_service.dart';
 import 'package:breadcrumb/ai/speech_input.dart';
@@ -41,7 +40,7 @@ class AiStatus {
 
   /// D30: ready is the full tier; unavailable (low RAM or Gemma didn't load)
   /// is the basic tier, PlaceMatcher over names and aliases; null while loading.
-  DeviceTier? get tier => switch (state) {
+  DeviceTier? get tier => !tuning.enableOnDeviceAi ? DeviceTier.basic : switch (state) {
     AiState.ready => DeviceTier.full,
     AiState.unavailable => DeviceTier.basic,
     AiState.loading => null,
@@ -155,7 +154,8 @@ class Wiring {
 
   final GemmaService gemmaService = GemmaService();
   final ValueNotifier<AiStatus> aiStatus =
-      ValueNotifier<AiStatus>(const AiStatus.loading());
+      ValueNotifier<AiStatus>(tuning.enableOnDeviceAi
+          ? const AiStatus.loading() : const AiStatus.unavailable(null));
   final ValueNotifier<bool> isAiReady = ValueNotifier<bool>(false);
   SpeechInput speechInput = SpeechInput();
   PlaceMatcher placeMatcher = FuzzyPlaceMatcher();
@@ -166,7 +166,8 @@ class Wiring {
   Future<bool>? _warmAiInFlight;
   Timer? _warmAiTimer;
 
-  late DestinationResolver destinationResolver = GemmaDestinationResolver(
+  late DestinationResolver destinationResolver = destinationResolverFor(
+    tuning.enableOnDeviceAi ? DeviceTier.full : DeviceTier.basic,
     matcher: FuzzyPlaceMatcher(),
     chooser: gemmaService,
   );
@@ -256,6 +257,11 @@ class Wiring {
   /// Catches errors and timeouts to transition to unavailable ("model not loaded").
   /// Concurrent calls share one in-flight Future.
   Future<bool> warmAi({Duration? timeout}) {
+    if (!tuning.enableOnDeviceAi) {
+      aiStatus.value = const AiStatus.unavailable(null);
+      isAiReady.value = false;
+      return Future.value(false);
+    }
     if (aiStatus.value.isReady) return Future.value(true);
     if (_warmAiInFlight != null) return _warmAiInFlight!;
 
@@ -333,7 +339,8 @@ class Wiring {
     gemmaLoader = null;
     aiWarmTimeout = const Duration(seconds: 90);
     destinationResolveTimeout = const Duration(seconds: 20);
-    aiStatus.value = const AiStatus.loading();
+    aiStatus.value = tuning.enableOnDeviceAi
+        ? const AiStatus.loading() : const AiStatus.unavailable(null);
     isAiReady.value = false;
   }
 }

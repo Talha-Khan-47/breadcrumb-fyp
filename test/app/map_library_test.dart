@@ -32,7 +32,7 @@ void main() {
   tearDown(() => docs.delete(recursive: true));
 
   test('slug makes safe file names', () {
-    expect(MapLibrary.slug('Team Groza table!'), 'team-groza-table');
+    expect(MapLibrary.slug('Project lab table!'), 'project-lab-table');
     expect(MapLibrary.slug('  '), 'map');
     expect(MapLibrary.slug('कैफ़े'), 'map');
     expect(MapLibrary.slug('a' * 60).length, 40);
@@ -91,13 +91,13 @@ void main() {
         named('Demo loop'),
         now: DateTime(2026, 10, 11, 9),
       );
-      await library.rename(a.id, '  Stage demo ');
+      await library.rename(a.id, '  Campus map ');
       final list = await library.list();
       expect(list.single.id, a.id);
-      expect(list.single.name, 'Stage demo');
+      expect(list.single.name, 'Campus map');
       expect(
         decodeMap(await mapsFile('latest.json').readAsString()).name,
-        'Stage demo',
+        'Campus map',
       );
       expect(() => library.rename(a.id, '   '), throwsArgumentError);
     },

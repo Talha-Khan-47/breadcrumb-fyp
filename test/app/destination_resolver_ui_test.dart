@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:breadcrumb/core/contracts.dart';
@@ -37,7 +36,7 @@ void main() {
     Wiring.instance.resetAiForTesting();
   });
 
-  testWidgets('renders "Where do you want to go?" text box, submit button, active mic button, and AI ready indicator', (tester) async {
+  testWidgets('renders "Where do you want to go?" text box, submit button, active mic button, and Basic matching indicator', (tester) async {
     // Set AI status directly to test the three UI states.
     Wiring.instance.aiStatus.value = const AiStatus.loading();
     await tester.pumpWidget(const MaterialApp(home: DestinationListScreen()));
@@ -52,12 +51,12 @@ void main() {
     expect(micButton.onPressed, isNotNull);
 
     // AI indicator shows warming
-    expect(find.text('AI warming...'), findsOneWidget);
+    expect(find.text('Basic matching'), findsOneWidget);
 
     // Change to ready
     Wiring.instance.aiStatus.value = const AiStatus.ready();
     await tester.pump();
-    expect(find.text('AI ready'), findsOneWidget);
+    expect(find.text('AI ready'), findsNothing);
   });
 
   testWidgets('D23: displays "You are at:" selector defaulting to last place', (tester) async {
@@ -98,31 +97,7 @@ void main() {
     expect(find.byType(NavigateScreen), findsOneWidget);
   });
 
-  testWidgets('shows Thinking... while working and disables submit', (tester) async {
-    final completer = Completer<PlaceMatch?>();
-    Wiring.instance.destinationResolver = StubDestinationResolver(
-      onResolve: (utterance, map) => completer.future,
-    );
-
-    await tester.pumpWidget(const MaterialApp(home: DestinationListScreen()));
-    await tester.pumpAndSettle();
-
-    await tester.enterText(find.byType(TextField), 'I need some snacks');
-    await tester.tap(find.widgetWithText(ElevatedButton, 'Submit'));
-    await tester.pump();
-
-    // Thinking indicator shown
-    expect(find.text('Thinking...'), findsOneWidget);
-    final submitButton = tester.widget<ElevatedButton>(find.widgetWithText(ElevatedButton, 'Thinking...')); 
-    expect(submitButton.onPressed, isNull);
-
-    // Complete with result
-    completer.complete(const PlaceMatch('cafe', 1.0));
-    await tester.pumpAndSettle();
-    expect(find.byType(NavigateScreen), findsOneWidget);
-  });
-
-  testWidgets('null or error shows "Didn\'t catch that, pick from the list" and list stays visible', (tester) async {
+  testWidgets('null or error shows "No match. Pick from the list" and list stays visible', (tester) async {
     Wiring.instance.destinationResolver = StubDestinationResolver(
       onResolve: (utterance, map) async => throw Exception('Model failed'),
     );
@@ -134,7 +109,7 @@ void main() {
     await tester.tap(find.widgetWithText(ElevatedButton, 'Submit'));
     await tester.pumpAndSettle();
 
-    expect(find.text("Didn't catch that, pick from the list"), findsOneWidget);
+    expect(find.text("No match. Pick from the list"), findsOneWidget);
     // Destination list items still visible
     expect(find.text('Cafe'), findsOneWidget);
     expect(find.text('Stage Side'), findsOneWidget);
@@ -153,33 +128,20 @@ void main() {
     await tester.tap(find.widgetWithText(ElevatedButton, 'Submit'));
     await tester.pumpAndSettle();
 
-    expect(find.text("Didn't catch that, pick from the list"), findsOneWidget);
+    expect(find.text("No match. Pick from the list"), findsOneWidget);
   });
 
-  testWidgets('ignores late answer if user typed again', (tester) async {
-    final completer = Completer<PlaceMatch?>();
+  testWidgets('unmatched requests never call the AI resolver', (tester) async {
+    var calls = 0;
     Wiring.instance.destinationResolver = StubDestinationResolver(
-      onResolve: (utterance, map) => completer.future,
+      onResolve: (utterance, map) async { calls++; return null; },
     );
-
     await tester.pumpWidget(const MaterialApp(home: DestinationListScreen()));
     await tester.pumpAndSettle();
-
-    await tester.enterText(find.byType(TextField), 'first request');
+    await tester.enterText(find.byType(TextField), 'unlisted destination');
     await tester.tap(find.widgetWithText(ElevatedButton, 'Submit'));
-    await tester.pump();
-    expect(find.text('Thinking...'), findsOneWidget);
-
-    // User types again
-    await tester.enterText(find.byType(TextField), 'second request');
-    await tester.pump();
-
-    // First request finishes late
-    completer.complete(const PlaceMatch('cafe', 1.0));
     await tester.pumpAndSettle();
-
-    // Should NOT have navigated because user changed input
-    expect(find.byType(NavigateScreen), findsNothing);
-    expect(find.byType(DestinationListScreen), findsOneWidget);
+    expect(calls, 0);
+    expect(find.text('No match. Pick from the list'), findsOneWidget);
   });
 }

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../theme.dart';
 
-/// A simple static screen explaining Breadcrumb's privacy posture.
+/// A simple static screen explaining IndoorNav's privacy posture.
 /// Reached from a small link on HomeScreen.
 class PrivacyScreen extends StatelessWidget {
   const PrivacyScreen({super.key});
@@ -59,7 +59,7 @@ class PrivacyScreen extends StatelessWidget {
               const SizedBox(height: 16),
               const _BulletRow(
                 icon: Icons.wifi_off_rounded,
-                text: 'No internet — all AI and map data runs on-device.',
+                text: 'No internet — matching and map data stay on this phone.',
               ),
               const SizedBox(height: 16),
               const _BulletRow(

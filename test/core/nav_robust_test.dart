@@ -7,7 +7,7 @@ import 'package:flutter_test/flutter_test.dart';
 
 import 'test_maps.dart';
 
-/// D27, from the iQOO loop test: orientation before the first step, corner
+/// D27, from the test phone loop test: orientation before the first step, corner
 /// wording, the off-route message and auto-recovery.
 ///
 /// demoMap: start --12, heading 0--> j1 --10, heading 90--> food_counter

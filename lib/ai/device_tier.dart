@@ -18,12 +18,12 @@ const String basicMatchingLabel = 'Basic matching';
 const String fullTierLabel = 'AI on-device';
 
 String aiChipLabel(DeviceTier tier) =>
-    tier == DeviceTier.full ? fullTierLabel : basicMatchingLabel;
+    enableOnDeviceAi && tier == DeviceTier.full ? fullTierLabel : basicMatchingLabel;
 
 /// Whether a phone with [totalRamMb] may try to load Gemma. 0 means unknown
 /// (`SensingSource.totalRamMb()`), and then loading decides.
 bool ramAllowsGemma(int totalRamMb) =>
-    totalRamMb <= 0 || totalRamMb >= fullTierMinRamMb;
+    enableOnDeviceAi && (totalRamMb <= 0 || totalRamMb >= fullTierMinRamMb);
 
 /// Decides the tier once: reads the RAM, loads Gemma only when the RAM allows it,
 /// and settles on [DeviceTier.full] only if that load succeeds. Concurrent and
@@ -59,6 +59,10 @@ class AiTierGate {
   Future<DeviceTier> decide() => _decision ??= _decide();
 
   Future<DeviceTier> _decide() async {
+    if (!enableOnDeviceAi) {
+      reason = 'Basic matching';
+      return _tier = DeviceTier.basic;
+    }
     try {
       ramMb = await totalRamMb();
     } catch (_) {
@@ -97,6 +101,6 @@ DestinationResolver destinationResolverFor(
   DeviceTier tier, {
   required PlaceMatcher matcher,
   PlaceChooser? chooser,
-}) => tier == DeviceTier.full && chooser != null
+}) => enableOnDeviceAi && tier == DeviceTier.full && chooser != null
     ? GemmaDestinationResolver(matcher: matcher, chooser: chooser)
     : BasicDestinationResolver(matcher);

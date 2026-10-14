@@ -1,4 +1,5 @@
 import 'map_screen.dart';
+import 'package:breadcrumb/core/tuning.dart' as tuning;
 import 'package:flutter/material.dart';
 import 'package:breadcrumb/ai/speech_input.dart';
 import 'package:breadcrumb/core/contracts.dart';
@@ -35,7 +36,7 @@ class _DestinationListScreenState extends State<DestinationListScreen> {
       if (widget.askStart && mounted) _showStartPlaceSelector(context);
     });
     // Warm Gemma AI if not already warmed
-    Wiring.instance.warmAi();
+    if (tuning.enableOnDeviceAi) Wiring.instance.warmAi();
   }
 
   Future<void> _reloadMap() async {
@@ -143,10 +144,10 @@ class _DestinationListScreenState extends State<DestinationListScreen> {
     }
 
     // 2. No match and AI not ready/unavailable: immediately show message with no spinner
-    if (!wiring.aiStatus.value.isReady) {
+    if (!tuning.enableOnDeviceAi || !wiring.aiStatus.value.isReady) {
       setState(() {
         _isThinking = false;
-        _feedbackMessage = wiring.aiStatus.value.isUnavailable
+        _feedbackMessage = !tuning.enableOnDeviceAi || wiring.aiStatus.value.isUnavailable
             ? 'No match. Pick from the list'
             : "AI isn't ready. Pick from the list";
       });
@@ -357,6 +358,13 @@ class _DestinationListScreenState extends State<DestinationListScreen> {
             child: ValueListenableBuilder<AiStatus>(
               valueListenable: wiring.aiStatus,
               builder: (context, status, _) {
+                if (!tuning.enableOnDeviceAi) {
+                  return const StatusPill(
+                    label: basicMatchingLabel,
+                    icon: Icons.manage_search_rounded,
+                    tone: StatusTone.neutral,
+                  );
+                }
                 if (status.isReady) {
                   return const StatusPill(
                     label: 'AI ready',
