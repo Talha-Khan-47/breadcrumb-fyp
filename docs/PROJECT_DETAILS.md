@@ -1,159 +1,348 @@
-# Project details
+# RAIN: Risk-Aware Indoor Navigation
 
-**Project title:** <FILL>
+**Final-Year Project — Implemented Navigation Core**
 
-**Temporary app name:** IndoorNav
+| Field | Details |
+|---|---|
+| Project title | RAIN: Risk-Aware Indoor Navigation |
+| College | Mangalore Institute of Technology & Engineering |
+| Department | CSE (AI & ML) |
+| Academic year | 2026–27 |
+| Guide | Dr. Farha Haneef |
 
-**Team members and USNs:** <FILL>
+| Team member | USN |
+|---|---|
+| Mohammed Ifzal | 4MT23CI026 |
+| Mohammed Saheel | 4MT23CI031 |
+| Syed Musid | 4MT23CI055 |
+| Talha Khan | 4MT23CI056 |
 
-**Guide:** <FILL>
+## Abstract
 
-**College:** Mangalore Institute of Technology & Engineering
+RAIN: Risk-Aware Indoor Navigation addresses indoor wayfinding in buildings where satellite positioning is unreliable and navigation infrastructure is unavailable. The implemented core is an offline Android application that records routes while a user walks with the phone in hand. Accelerometer input detects steps, and gyroscope rotation measured around gravity identifies turn candidates. A turn is confirmed after 2 steps in the new direction within 8 seconds, and recorded turns are snapped to 90°. Named places and corridors form a locally stored graph that supports loops, multiple maps and manually confirmed floor changes. Users select destinations by typing or speaking a name, with exact, fuzzy and alias matching. A shortest-path planner provides guidance through an arrow, spoken instructions, vibration and a moving position marker. Confidence checks, sign reading, off-route recovery and arrival confirmation help manage accumulated tracking error. Flutter and Dart implement the application and navigation logic, while Kotlin supplies Android sensor information. Learned risk-based routing, visual recognition fusion and advanced AI assistance remain planned extensions beyond the submitted navigation core.
 
-**Department:** CSE (AI & ML)
+## 1. Introduction
 
-**Academic year:** 2026–27
+Finding rooms and other indoor destinations can be difficult for students, visitors and people unfamiliar with a building. GPS does not reliably identify indoor rooms and corridors. Buildings may also lack installed navigation equipment or a usable digital floor map.
 
-## Abstract (draft)
+RAIN investigates navigation using a person's Android phone and locally available information. The implemented application lets a user record a walking route, mark useful places and later follow guidance to those places.
 
-Indoor navigation is difficult where satellite positioning is unreliable and network access is unavailable. This project develops an Android application that records a walking route using phone motion sensors and guides users back to marked places. Accelerometer samples support step counting, while gyroscope rotation measured around gravity identifies turns. Confirmed turns and step distances form a graph of places and corridors. Users name locations, save maps locally, and select destinations through text, speech, or sign reading. A shortest path planner and position tracker provide arrow guidance, spoken instructions, and vibration. Confidence checks, position confirmations, and off route recovery reduce the impact of accumulated error. The system operates without GPS, internet, beacons, or building infrastructure, supporting navigation along previously recorded routes.
+The broader project aims to improve the reliability of indoor guidance. The submitted core addresses uncertainty through turn confirmation, confidence checks, sign-based position correction and recovery instructions. Its implemented route planner selects a shortest path. Learned risk-based route selection remains planned work.
 
-## 1 Introduction
+## 2. Problem statement
 
-People often lose their way inside unfamiliar buildings. Satellite positioning does not reliably distinguish indoor corridors or rooms. IndoorNav lets a person record a route once and return to named places using only their Android phone. It is a final year project intended for practical college evaluation.
+Develop an Android application that guides users to previously marked indoor places without relying on GPS, internet connectivity, installed beacons, an account or a venue mapping service.
 
-## 2 Problem statement
+The application must account for noisy phone movement and accumulated tracking error. It must distinguish walking turns from movements caused by looking around, communicate uncertainty, support position correction and request arrival confirmation when necessary.
 
-Provide offline guidance to previously marked indoor places without GPS, internet, installed beacons or a venue mapping service. Phone movement is noisy and distance estimates drift, so the system must communicate uncertainty and let the user confirm position.
+## 3. Objectives
 
-## 3 Objectives
+The objectives addressed by the implemented core are to:
 
-- Record walking routes using step and turn events.
-- Build and store a graph of named places and corridors.
-- Plan a shortest route between reachable places.
-- Guide the walker using an arrow, speech and vibration.
-- Reduce misleading guidance through turn confirmation, confidence checks and recovery.
-- Support saved maps, manual floor changes and optional sign reading.
+- Record walking routes from step and turn events while the phone is held in hand.
+- Confirm turn candidates using subsequent walking steps.
+- Build and store a graph of named places, junctions and corridors.
+- Support recorded loops, multiple saved maps and manual floor transitions.
+- Find places using exact names, fuzzy matching and aliases.
+- Select a shortest path between reachable places.
+- Provide arrow guidance, spoken instructions, vibration and a moving map marker.
+- Support typed and spoken destination input.
+- Read printed signs to identify or correct the user's position.
+- Manage uncertainty through confidence checks, off-route recovery and arrival confirmation.
+- Store map and navigation data locally and operate offline.
 
-## 4 Scope
+The longer-term research objective is to extend this core with learned route-risk estimation and selective position checks. Those extensions are outside the implemented scope of the submitted APK.
 
-The application navigates along routes that a person has already walked and recorded. It supports loops, multiple floors and several locally saved maps. This release uses exact, fuzzy and alias matching for destination search. It does not infer unrecorded corridors or absolute geographic coordinates. The phone is held in the hand, and floor changes require a manual confirmation.
+## 4. Scope
 
-## 5 Existing systems and their limits
+### 4.1 Implemented scope
 
-GPS signals weaken indoors and do not reliably locate a user in a particular room. Wi-Fi fingerprinting needs reference measurements and maintenance when the wireless environment changes. BLE beacons need installation, power and upkeep. Venue indoor maps depend on available floor plans and do not by themselves track a walker's position. These approaches can be useful, but have requirements outside this project's infrastructure-free scope.
+The application navigates along routes that a person has already walked and recorded. It supports named places, aliases, loops and several maps stored on the phone.
 
-## 6 Proposed system
+Recorded routes can span multiple floors using stairs, lift or escalator connections. The user records or confirms a floor change manually.
 
-The user walks a route, marks places and saves the resulting map. Sensors produce steps and turn candidates; confirmation filters handling movements. Later a selected destination is matched against known places. A route planner chooses connected corridors, and a tracker estimates progress. The guide provides directions and asks for confirmation when needed. All map data remains on the phone.
+Destination selection supports typing, on-device speech recognition and selection from known places. Camera-based sign reading can identify a starting place or correct position against the active map.
 
-## 7 System architecture
+The phone is held in the hand during recording and navigation. Guidance is based on the saved route graph and estimated movement along it.
+
+### 4.2 Planned scope
+
+Learned risk-based planning, learned scan prompting, visual doorway recognition, text-image fusion, AR guidance, Wi-Fi research and adaptive radio-map learning are planned project extensions.
+
+The separate AI assistant module is switched off in the submitted build. These planned modules are not part of the APK's demonstrated feature set.
+
+## 5. Existing systems and their limits
+
+GPS is useful for outdoor positioning but does not reliably identify a user's room or corridor inside a building.
+
+Wi-Fi fingerprinting requires reference measurements and maintenance when the wireless environment changes. BLE beacon systems require installed devices, power and upkeep. Venue map systems depend on available map information, and a floor plan alone does not track the user's movement.
+
+These approaches can support indoor navigation where their required infrastructure and data are available. RAIN's implemented core instead uses routes recorded on the phone, motion sensing and user-confirmed place information.
+
+## 6. Proposed system
+
+The user records a route while walking with the phone in hand. Motion input produces step events and turn candidates. A turn is accepted only after subsequent steps confirm movement in the new direction.
+
+The user marks places with names and optional aliases. These places, junctions and corridors form a graph stored locally. Loop closure joins a recording to an existing place. Floor transitions are recorded manually.
+
+During navigation, the user selects a starting place and destination. The destination is matched against places in the active map, and the planner selects a shortest path.
+
+The tracker estimates progress using steps and confirmed turns. The guide presents an arrow, spoken instructions, vibration and a moving marker. Confidence checks, sign reading and explicit confirmations provide opportunities to correct the estimated position. Off-route recovery helps the user return towards the saved path.
+
+## 7. System architecture
 
 ```text
-Record:   sensors → sense → confirm turn → map builder
-                                              ↓
-Storage:                            saved maps on the phone
-                                              ↓
-Navigate: chosen place → route planner → tracker → guide
-                                                    ↓
-                                          arrow / voice / vibration
+RECORDING
+Android motion sensors
+          |
+          v
+Native Kotlin sensor channel
+          |
+          v
+Dart step detection and gravity-referenced turn detection
+          |
+          v
+Turn confirmation: 2 steps within 8 seconds
+          |
+          v
+Map builder <--- Named places, aliases, loops and manual floor changes
+          |
+          v
+Local saved-map library: JSON graph files
+          |
+          v
+NAVIGATION
+Selected start + destination
+          ^
+          |
+Typed name / on-device speech / recognised sign text
+          |
+          v
+Exact, fuzzy and alias matching
+          |
+          v
+Shortest-path route planner
+          |
+          v
+Progress tracker <--- Steps, confirmed turns and manual floor confirmation
+          |
+          +<--- Position confirmation and sign-based position correction
+          |
+          v
+Confidence checks and off-route recovery
+          |
+          v
+Guide: arrow / speech / vibration / moving map marker
+          |
+          v
+Arrival confirmation
 ```
 
-## 8 Modules
+The implemented architecture operates on the phone. Planned AI, AR and wireless research modules are outside this submission architecture.
 
-### Sensing
+## 8. Modules
 
-A native Kotlin channel streams Android sensor information to Dart.
-Accelerometer input supports step detection; hardware step events are also supported.
-Gyroscope rotation is projected around gravity to measure walking turns.
+### 8.1 Motion sensing
 
-### Turn confirmation
+A native Kotlin channel supplies Android sensor information to Dart.
 
-A turn candidate needs two following steps within eight seconds.
-Candidates caused by handling or looking around can be rejected.
-Confirmed recording turns are snapped to cardinal directions at 90° intervals.
+Accelerometer input supports walking step detection. Compatible phones can also provide hardware step events.
 
-### Map builder with loops and floors
+Gyroscope rotation is measured around gravity to identify turns without requiring the phone to remain flat. This supports the hand-held recording and navigation workflow.
 
-Named places and unnamed junctions become graph nodes.
-Corridors store step distance and heading, with optional floor transitions.
-Joining an existing place closes a loop; display correction improves the drawing without changing measured route distances.
+### 8.2 Turn confirmation
 
-### Route planner
+A turn candidate requires 2 steps in the new direction within 8 seconds.
 
-The planner searches the saved graph for a shortest path.
-Corridor steps form its distance cost, with an extra cost for floor transitions.
-It returns ordered route legs for the tracker and guide.
+This confirmation helps reject turns caused by looking around or handling the phone without continuing to walk in that direction. Confirmed recording turns are snapped to 90° intervals.
 
-### Tracker and confidence
+### 8.3 Map builder, loops and floors
 
-Steps and confirmed turns update progress along the planned route.
-Confidence decreases with walking and improves at confirmed positions or corners.
-The guide can ask “Are you at X?” when confidence falls.
+Named places and unnamed junctions become graph nodes. Corridors store step distance and direction.
 
-### Guide and off-route recovery
+Users mark places while walking and can add aliases. **Finish at start** supports closing a recorded loop. Joining an existing place connects the route graph. Display correction improves the schematic drawing without changing measured route distances.
 
-The guide converts route progress into straight, turn and floor instructions.
-An unexpected turn triggers recovery instructions towards the path.
-Uncertain arrival asks the user to confirm rather than claiming a known position.
+The map supports stairs, lift and escalator connections between floors. Floor changes use the manual **Change floor** action or a requested confirmation.
 
-### Voice input and spoken output
+### 8.4 Place matching and route planning
 
-On-device speech recognition converts a spoken destination to text.
-The same PlaceMatcher checks text against place names and saved aliases.
-Text-to-speech speaks guidance; offline recognition needs a language pack on the phone.
+The application matches a destination using exact names, fuzzy matching or saved aliases.
 
-### Sign reading
+The planner searches the active graph for a shortest path between reachable places. Corridor steps form the distance cost, with an additional cost for floor transitions. The result is an ordered sequence of route legs for tracking and guidance.
 
-The optional camera screen uses ML Kit text recognition to read a sign.
-Recognised text is checked against places in the active map.
-A match can identify the starting place or anchor navigation to a known place.
+Learned risk-based route selection is a planned extension.
 
-### Storage and saved maps
+### 8.5 Position tracking and confidence
+
+Steps and confirmed turns update progress along the planned route. A moving dot shows the estimated position on the schematic map.
+
+Confidence decreases with walking and improves at confirmed positions or corners. The application can ask “Are you at X?” when a position check is needed.
+
+A confidence value represents the application's estimate. It is not an independently measured position.
+
+### 8.6 Guidance, recovery and arrival
+
+The guide converts route progress into straight-ahead, turn and floor-change instructions.
+
+Guidance is presented through a large arrow, spoken instructions and vibration on turns. An unexpected turn can trigger off-route recovery instructions towards the planned path.
+
+Arrival uses the application's confirmation flow. When arrival is uncertain, the user is asked to confirm rather than relying only on estimated travel distance.
+
+### 8.7 Voice input and spoken output
+
+On-device speech recognition converts a spoken destination to text. The place matcher checks that text against names and aliases in the active map.
+
+Text-to-speech provides spoken directions. Offline voice input requires a supported recognition service and an installed language pack. Typed destination input remains available.
+
+### 8.8 Sign reading
+
+The optional camera screen uses ML Kit text recognition to read a printed sign.
+
+Recognised text is matched against known places in the active map. A match can identify the starting place or provide a position reference during navigation.
+
+Sign reading requires readable text associated with a known place.
+
+### 8.9 Local storage and saved maps
 
 Maps are stored as JSON files in the phone's application storage.
-The library keeps multiple recordings and remembers the active map.
-Users can choose, rename or delete maps, with confirmation before deletion.
 
-## 9 Hardware and software requirements
+The saved-map library supports multiple recordings and remembers the active map. Users can choose, rename or delete maps, with confirmation before deletion.
 
-An ARM64 Android phone with an accelerometer and gyroscope is required. The actual configured minimum SDK is API 30, which means Android 11 or newer. Offline speech input also requires a supported recognition service and installed language pack. Camera permission is optional for sign reading.
+Recorded map and navigation data remain on the phone.
 
-Development requires Flutter, Dart, Kotlin and the Android SDK. The CI workflow uses Java 17 and Flutter 3.47.7 on the stable channel. A computer is needed for source editing; GitHub Actions builds the installable release APK.
+### 8.10 Planned modules
 
-## 10 Implementation summary
+The following modules belong to the broader final-year project and are not implemented features of the submitted APK:
 
-Flutter handles screens, map drawing and interaction. Pure Dart implements sensing logic, turn confirmation, graph building, matching, route planning, tracking and guidance. Kotlin connects Android sensors to Flutter through the existing channels. Speech, text-to-speech, vibration and ML Kit connect optional phone capabilities to the navigation flow.
+- Learned route-risk estimation and risk-based route selection.
+- Learned or cost-sensitive scan prompting.
+- Doorway appearance recognition and fusion with sign text.
+- AR route guidance.
+- Optional Wi-Fi studies and adaptive radio-map learning.
+- AI assistance for natural-language requests.
+- Comparative research evaluation of planning and confirmation strategies.
 
-The application ID is `com.fyp.indoornav`, allowing installation beside the original app. Release signing uses the existing debug key without secrets. GitHub Actions analyzes and tests the code before building. On a push to main it publishes the APK, README and this report as release assets; Word conversion is optional if pandoc installation or conversion fails.
+## 9. Hardware and software requirements
 
-## 11 Testing and results
+### 9.1 Hardware
 
-Measured walking results supplied for this report are:
+- An ARM64 Android phone.
+- An accelerometer and gyroscope.
+- A camera for optional sign reading.
+- Audio output for spoken instructions and vibration support for haptic guidance.
+- A computer for source editing and development.
 
-- 9 out of 9 hand-held turns detected, with 0 false turns.
-- 30 out of 30 steps counted on a straight walk.
-- 19–21 steps counted on 20-step walks.
-- False turns from looking around reduced from 8 to 0 by turn confirmation on test traces.
+The phone must be held in hand during the supported walking workflow.
 
-These observations describe the measured walks and traces, not a guarantee for every phone or building. The repository includes unit and widget tests and replay tests using recorded walking traces. The automated test declaration count is recorded below; parameterised declarations can generate additional cases at runtime. Flutter is unavailable in the editing environment, so these declarations were counted from source and this revision has not yet been executed locally. CI runs `flutter analyze` and `flutter test -j 1` before producing the APK.
+### 9.2 Software
 
-The current repository contains **600 automated test declarations** across 75 Dart test and support files. This is a source count, not an executed pass count.
+- Android 11 or newer, corresponding to minimum SDK API 30.
+- Flutter and Dart for application development.
+- Kotlin and the Android SDK for native sensor integration.
+- ML Kit text recognition for sign reading.
+- A supported on-device speech recognition service and installed language pack for offline voice input.
+- Text-to-speech support for spoken guidance.
 
-## 12 Limitations
+The supplied CI configuration uses Java 17 and Flutter 3.47.7 on the stable channel. GitHub Actions performs analysis, testing and APK building.
 
-The phone must be held in hand. Fast walking can undercount steps by 10–15%. Distance and heading error accumulate on long walks; recognised-place confirmations reduce this drift. Floor changes are manual taps. Only recorded connected routes are available. Offline speech depends on installed language packs. Sign reading depends on readable text that matches a known place. Arrival confirmation is required when progress does not satisfy the arrival guard.
+Camera permission is optional for sign reading. The navigation workflow requires no GPS, internet connection, beacons or account.
 
-## 13 Future enhancements
+## 10. Implementation summary
 
-An on-device AI assistant could interpret natural-language requests. Other future work includes pocket mode, automatic floor detection using a barometer, venue maps shared through QR codes, and a voice-first mode for visually impaired users. These are proposed enhancements rather than claims about the current release.
+Flutter provides the screens, schematic map and user interaction. Dart implements step and turn processing, turn confirmation, graph building, place matching, route planning, tracking and guidance.
 
-## 14 Conclusion
+Kotlin connects Android sensor information to Flutter through native channels. Speech recognition, text-to-speech, vibration and ML Kit connect the relevant phone capabilities to the navigation workflow.
 
-IndoorNav demonstrates navigation along user-recorded indoor routes without positioning infrastructure. A local graph, step and turn tracking, and multimodal guidance provide a practical route-following workflow. Confirmation and recovery make uncertainty visible, while saved maps let users reuse their recordings. Further phone and walking evaluations are needed to establish performance across different conditions.
+Maps are stored as local JSON files. Corridor distances are represented in steps, and floor changes are entered or confirmed manually.
+
+The application ID is `com.fyp.indoornav`. The submitted APK filename is `IndoorNav-v1.0.apk`.
+
+Release builds use the repository's debug signing key for college testing. GitHub Actions runs analysis and tests before building. Pushes to main publish the APK, README and project report as release assets. Word conversion is optional when its installation or conversion step is unavailable.
+
+The separate AI assistant module is switched off in this submission. Learned planning, visual recognition fusion and AR guidance remain planned extensions.
+
+## 11. Testing and results
+
+### 11.1 Measured walking results
+
+The measured results supplied for this report are:
+
+| Test | Reported result |
+|---|---|
+| Hand-held turn detection | 9/9 hand-held turns detected with 0 false turns |
+| Straight walking step count | 30/30 steps counted on a straight walk |
+| Repeated 20-step walks | 19–21 steps counted on 20-step walks |
+| Looking-around movements | False turns reduced from 8 to 0 by turn confirmation |
+
+These observations describe the measured walks and recorded traces. They do not establish a general accuracy percentage or guarantee performance across all phones, users, buildings or walking conditions.
+
+### 11.2 Automated testing
+
+The repository contains unit tests, widget tests and replay tests using real recorded walking traces.
+
+The supplied source inventory contains **600 automated test declarations across 75 Dart test and support files**. This is a source count, not an executed pass count. Parameterised declarations can generate additional cases at runtime.
+
+The analysis and test commands are:
+
+```sh
+flutter analyze
+flutter test -j 1
+```
+
+Flutter was unavailable in the editing environment described in the supplied documents. An executed passing result for this revision must therefore be established by CI.
+
+The measured walking observations and the automated source inventory are reported separately. No additional pass count or user-study result is claimed.
+
+## 12. Limitations
+
+- The supported workflow requires the phone to be held in hand.
+- Fast walking undercounts steps by 10–15%.
+- Floor changes require a manual tap or confirmation.
+- Distance and direction error accumulate on long walks. Position confirmations help reduce this drift.
+- Navigation is limited to previously recorded, connected routes.
+- The temporary sample map does not represent the user's building.
+- Offline speech input depends on a supported recognition service and installed language packs.
+- Sign reading depends on readable text that matches a known place.
+- Estimated progress does not independently verify the user's physical location or arrival.
+- Planned research modules are not available in the submitted APK.
+
+## 13. Future enhancements
+
+### 13.1 Planned final-year project extensions
+
+**Learned risk-based routing:** collect navigation observations and use them to estimate difficult route segments or junctions. Compare route choices against the implemented shortest-path planner.
+
+**Selective scan prompting:** investigate when a sign check is useful, considering accumulated uncertainty and the availability of a recognisable place.
+
+**Visual recognition fusion:** combine sign text with doorway appearance to support cases where one source is insufficient.
+
+**AR guidance:** add camera-view route instructions and evaluate their alignment and walking behaviour.
+
+**Wi-Fi research and adaptive radio-map learning:** investigate optional wireless observations, environmental change and map maintenance as separate research extensions.
+
+**AI assistance:** enable an on-device assistant for natural-language requests after implementation and evaluation.
+
+**Research evaluation:** compare route planning, confirmation and recovery strategies using collected navigation data.
+
+### 13.2 Additional usability enhancements
+
+- Pocket-mode operation.
+- Automatic floor detection using a barometer.
+- Venue-map sharing through QR codes.
+- A voice-first mode for visually impaired users.
+
+These enhancements require implementation and testing before they can be reported as working features.
+
+## 14. Conclusion
+
+RAIN's implemented core provides offline navigation along user-recorded indoor routes. Step and turn processing builds a local graph, while place matching and shortest-path planning support navigation to marked destinations.
+
+Arrow guidance, speech, vibration and a moving map marker communicate progress. Turn confirmation rejects handling-related turn candidates, while confidence checks, sign reading, recovery and arrival confirmation help users manage uncertain position estimates.
+
+The supplied walking results describe the tested observations, and the automated test suite supports further verification. Learned risk routing and other research extensions remain planned work. Further evaluations are needed to establish performance across different phones, buildings and walking conditions.
 
 ## References
 
-- Flutter documentation
-- Android Developers: Sensors overview
-- Android Developers: Motion sensors
+- Flutter documentation.
+- Android Developers: Sensors overview.
+- Android Developers: Motion sensors.
