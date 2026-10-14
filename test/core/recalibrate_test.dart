@@ -7,7 +7,7 @@ import 'package:flutter_test/flutter_test.dart';
 
 import 'test_maps.dart';
 
-/// D31, from the iQOO debug buttons: off route, a running facing; facing the leg
+/// D31, from the test phone debug buttons: off route, a running facing; facing the leg
 /// again rejoins it ("Back on route"), and the Guide turns or walks the walker
 /// back to the path.
 ///

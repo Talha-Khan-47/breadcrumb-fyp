@@ -87,7 +87,7 @@ are written without them:
  "kind": "stairs", "floorDelta": 1}
 ```
 
-**The iQOO 15 has no barometer**, so on this phone floor changes are manual: one tap
+**The test phone 15 has no barometer**, so on this phone floor changes are manual: one tap
 completes the transition ("I am here" on a transition leg taps the node at its top, or
 the app calls `onFloorChange` with the leg's `floorDelta`). Where a barometer exists, a
 `FloorDetector` (not built yet) would call `onFloorChange` automatically.

@@ -39,7 +39,7 @@ void main() {
     testWidgets('exact place name resolves with the AI unavailable', (tester) async {
       final wiring = Wiring.instance;
       wiring.aiStatus.value = const AiStatus.unavailable('model not loaded');
-      wiring.gemmaLoader = () async => throw Exception('Model missing');
+      wiring.gemmaLoader = () async => fail('Gemma loader must not be called');
 
       await tester.pumpWidget(const MaterialApp(home: DestinationListScreen()));
       await tester.pumpAndSettle();
@@ -58,7 +58,7 @@ void main() {
     testWidgets('exact alias resolves with the AI unavailable', (tester) async {
       final wiring = Wiring.instance;
       wiring.aiStatus.value = const AiStatus.unavailable('model not loaded');
-      wiring.gemmaLoader = () async => throw Exception('Model missing');
+      wiring.gemmaLoader = () async => fail('Gemma loader must not be called');
 
       await tester.pumpWidget(const MaterialApp(home: DestinationListScreen()));
       await tester.pumpAndSettle();
@@ -74,7 +74,7 @@ void main() {
     testWidgets('unknown text with the AI unavailable shows the message immediately', (tester) async {
       final wiring = Wiring.instance;
       wiring.aiStatus.value = const AiStatus.unavailable('model not loaded');
-      wiring.gemmaLoader = () async => throw Exception('Model missing');
+      wiring.gemmaLoader = () async => fail('Gemma loader must not be called');
 
       await tester.pumpWidget(const MaterialApp(home: DestinationListScreen()));
       await tester.pumpAndSettle();
@@ -93,7 +93,7 @@ void main() {
       expect(find.text('Stage Side'), findsOneWidget);
     });
 
-    testWidgets('resolver timeout shows the message', (tester) async {
+    testWidgets('disabled AI bypasses a delayed resolver', (tester) async {
       final wiring = Wiring.instance;
       wiring.aiStatus.value = const AiStatus.ready();
       wiring.destinationResolveTimeout = const Duration(milliseconds: 50);
@@ -111,14 +111,14 @@ void main() {
       await tester.pump();
 
       // Initially thinking
-      expect(find.text('Thinking...'), findsOneWidget);
+      expect(find.text('Thinking...'), findsNothing);
 
       // Wait past timeout
       await tester.pump(const Duration(milliseconds: 100));
       await tester.pumpAndSettle();
 
       // Shows fallback message
-      expect(find.text("Didn't catch that, pick from the list"), findsOneWidget);
+      expect(find.text("No match. Pick from the list"), findsOneWidget);
       expect(find.text('Thinking...'), findsNothing);
 
       // List stays visible

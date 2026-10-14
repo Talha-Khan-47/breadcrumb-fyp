@@ -409,7 +409,7 @@ abstract interface class Tracker {
 
   /// [delta] floors moved: +1 up, -1 down (D24). Completes the next transition
   /// leg once the floors moved reach its `floorDelta`. Comes from one tap in the
-  /// app (no barometer, like the iQOO 15) or from a FloorDetector.
+  /// app (no barometer, like the test phone 15) or from a FloorDetector.
   Position onFloorChange(int delta);
 
   /// The app turns this on while the sign-scan screen is open.

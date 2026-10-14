@@ -13,7 +13,7 @@ class RecordDebugApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => MaterialApp(
-    title: 'Breadcrumb record debug',
+    title: 'IndoorNav record debug',
     debugShowCheckedModeBanner: false,
     theme: ThemeData(colorSchemeSeed: Colors.teal, useMaterial3: true),
     home: const RecordScreen(),

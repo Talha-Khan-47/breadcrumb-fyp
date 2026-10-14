@@ -121,7 +121,7 @@ void main() {
       await tester.pumpAndSettle();
       await tester.enterText(
         find.byKey(const ValueKey('rename-field')),
-        'Stage demo',
+        'Campus map',
       );
       await tester.tap(find.byKey(const ValueKey('rename-save')));
       await settleIo(
@@ -129,21 +129,21 @@ void main() {
         done: () => find
             .descendant(
               of: find.byType(ListTile),
-              matching: find.text('Stage demo'),
+              matching: find.text('Campus map'),
             )
             .evaluate()
             .isNotEmpty,
       );
-      expect(find.text('Stage demo'), findsOneWidget);
+      expect(find.text('Campus map'), findsOneWidget);
 
       await tester.tap(find.byKey(ValueKey('saved-map-menu-${a.id}')));
       await tester.pumpAndSettle();
       await tester.tap(find.text('Delete'));
       await tester.pumpAndSettle();
-      expect(find.text('Delete "Stage demo"?'), findsOneWidget);
+      expect(find.text('Delete "Campus map"?'), findsOneWidget);
       await tester.tap(find.byKey(const ValueKey('delete-no')));
       await settleIo(tester);
-      expect(find.text('Stage demo'), findsOneWidget);
+      expect(find.text('Campus map'), findsOneWidget);
 
       await tester.tap(find.byKey(ValueKey('saved-map-menu-${a.id}')));
       await tester.pumpAndSettle();
@@ -152,9 +152,9 @@ void main() {
       await tester.tap(find.byKey(const ValueKey('delete-yes')));
       await settleIo(
         tester,
-        done: () => find.text('Stage demo').evaluate().isEmpty,
+        done: () => find.text('Campus map').evaluate().isEmpty,
       );
-      expect(find.text('Stage demo'), findsNothing);
+      expect(find.text('Campus map'), findsNothing);
       expect(find.text('New'), findsOneWidget);
       expect((await tester.runAsync(library.list))!.map((m) => m.name), [
         'New',

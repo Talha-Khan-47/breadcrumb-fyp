@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../theme.dart';
 import '../widgets/ui/ui.dart';
 import '../wiring.dart';
-import 'package:breadcrumb/ai/device_tier.dart' show basicMatchingLabel;
+import 'package:breadcrumb/core/tuning.dart' as tuning;
 import 'destination_list_screen.dart';
 import 'record_screen.dart';
 import 'privacy_screen.dart';
@@ -23,7 +23,7 @@ class _HomeScreenState extends State<HomeScreen> {
     // Load latest recorded map if available (D22)
     Wiring.instance.reloadActiveMap();
     // Warm Gemma AI in background
-    Wiring.instance.warmAi();
+    if (tuning.enableOnDeviceAi) Wiring.instance.warmAi();
   }
 
   @override
@@ -45,34 +45,7 @@ class _HomeScreenState extends State<HomeScreen> {
               style: BreadcrumbTheme.bodySecondary,
             ),
             const SizedBox(height: 16),
-            ValueListenableBuilder<AiStatus>(
-              valueListenable: Wiring.instance.aiStatus,
-              builder: (context, status, _) => Wrap(
-                spacing: 8,
-                runSpacing: 8,
-                crossAxisAlignment: WrapCrossAlignment.center,
-                children: [
-                  const StatusPill.offline(),
-                  if (status.isReady)
-                    const StatusPill.aiOnDevice(ready: true)
-                  else if (status.isLoading)
-                    const StatusPill.aiOnDevice(ready: false)
-                  else ...[
-                    const StatusPill(
-                      // D30: unavailable is the basic tier (matcher + aliases).
-                      label: basicMatchingLabel,
-                      icon: Icons.manage_search_rounded,
-                      tone: StatusTone.neutral,
-                    ),
-                    if (status.reason != null && status.reason!.isNotEmpty)
-                      Text(
-                        status.reason!,
-                        style: BreadcrumbTheme.caption,
-                      ),
-                  ],
-                ],
-              ),
-            ),
+            const StatusPill.offline(),
             const SizedBox(height: 32),
             ActionCard(
               icon: Icons.directions_walk_rounded,
@@ -189,7 +162,7 @@ class _Wordmark extends StatelessWidget {
   Widget build(BuildContext context) {
     return Semantics(
       header: true,
-      label: 'Breadcrumb',
+      label: 'IndoorNav',
       child: ExcludeSemantics(
         child: Row(
           children: [
@@ -201,7 +174,7 @@ class _Wordmark extends StatelessWidget {
             const SizedBox(width: 8),
             Flexible(
               child: Text(
-                'Breadcrumb',
+                'IndoorNav',
                 style: BreadcrumbTheme.display,
               ),
             ),

@@ -201,7 +201,7 @@ void main() {
     expect(tracker.anchor('food_counter').needsReplan, isTrue);
   });
 
-  // D26: the bug seen on the iQOO. "I am here" moves the position past a
+  // D26: the bug seen on the test phone. "I am here" moves the position past a
   // junction before the person physically turns there, and at the destination
   // the person turns to face the place; neither turn is off route.
   test('"I am here" at each node, turning after each tap, ends on arrival', () {

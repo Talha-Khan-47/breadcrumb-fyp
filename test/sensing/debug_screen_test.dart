@@ -82,7 +82,7 @@ void main() {
 
 class MemoryRecorder extends TraceRecorder {
   static const path =
-      '/data/user/0/com.teamgroza.breadcrumb/app_flutter/traces/test.jsonl';
+      '/data/user/0/com.fyp.indoornav/app_flutter/traces/test.jsonl';
   final rows = <Map<String, Object?>>[];
   bool active = false;
   @override

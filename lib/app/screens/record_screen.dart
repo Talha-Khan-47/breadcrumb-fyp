@@ -563,6 +563,7 @@ class _RecordScreenState extends State<RecordScreen> {
     String name,
     List<contracts.Place> places,
   ) async {
+    if (!tuning.enableOnDeviceAi) return;
     final marked = places.where(
       (p) => p.name == name && p.kind != contracts.PlaceKind.junction,
     );

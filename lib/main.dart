@@ -10,7 +10,7 @@ class BreadcrumbApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Breadcrumb',
+      title: 'IndoorNav',
       theme: BreadcrumbTheme.themeData,
       home: const PermissionsScreen(),
     );

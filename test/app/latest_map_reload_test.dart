@@ -12,7 +12,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'record_screen_test.dart' show confirmIfAsked;
 import 'package:path_provider/path_provider.dart';
 
-/// The iQOO loop bug: Home read maps/latest.json once at app start, before
+/// The test phone loop bug: Home read maps/latest.json once at app start, before
 /// anything was recorded, so Navigate kept the demo map after a save.
 void main() {
   late Directory documents;
@@ -43,7 +43,7 @@ void main() {
     await confirmIfAsked(tester, key);
   }
 
-  /// Records the loop from the iQOO test on the real RecordScreen and saves it
+  /// Records the loop from the test phone test on the real RecordScreen and saves it
   /// to latest.json with the real save function.
   Future<MapGraph> recordLoop(WidgetTester tester, String start, List<String> marks) async {
     final events = StreamController<Object>.broadcast(sync: true);
@@ -105,10 +105,10 @@ void main() {
 
       final map = await recordLoop(
         tester,
-        'team groza table',
+        'project lab table',
         ['food counter', 'washroom'],
       );
-      final names = ['team groza table', 'food counter', 'washroom', 'End of walk'];
+      final names = ['project lab table', 'food counter', 'washroom', 'End of walk'];
       expect(
         map.places.where((p) => p.kind != PlaceKind.junction).map((p) => p.name),
         names,
@@ -138,14 +138,14 @@ void main() {
   testWidgets(
     'reopening Navigate keeps the "You are at" choice until a newer map is saved',
     (tester) async {
-      await recordLoop(tester, 'team groza table', ['food counter']);
+      await recordLoop(tester, 'project lab table', ['food counter']);
       await openNavigate(tester);
-      final table = wiring.map.places.firstWhere((p) => p.name == 'team groza table');
+      final table = wiring.map.places.firstWhere((p) => p.name == 'project lab table');
       wiring.currentPlaceId = table.id;
 
       await tester.pumpWidget(const SizedBox.shrink());
       await openNavigate(tester);
-      expect(find.text('You are at: team groza table'), findsOneWidget);
+      expect(find.text('You are at: project lab table'), findsOneWidget);
 
       await recordLoop(tester, 'gate', ['stage']);
       await openNavigate(tester);

@@ -18,7 +18,7 @@ class SensingDebugApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => MaterialApp(
-    title: 'Breadcrumb sensing debug',
+    title: 'IndoorNav sensing debug',
     debugShowCheckedModeBanner: false,
     home: SensingDebugScreen(source: source),
   );

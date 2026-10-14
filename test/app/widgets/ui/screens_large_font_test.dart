@@ -60,7 +60,7 @@ void main() {
     expect(tester.takeException(), isNull);
     expect(find.text('Find your way back. No GPS, no internet.'), findsOneWidget);
     expect(find.text('Offline'), findsOneWidget);
-    expect(find.text('AI on-device'), findsOneWidget);
+    expect(find.text('AI on-device'), findsNothing);
     expect(find.text('Navigate'), findsOneWidget);
     await tester.scrollUntilVisible(find.text('Record a trail'), 200);
     expect(find.text('Record a trail'), findsOneWidget);
@@ -79,7 +79,7 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
-  testWidgets('Destination fits at font scale 1.3, idle and while thinking', (tester) async {
+  testWidgets('Destination fits at font scale 1.3, idle and after an unmatched search', (tester) async {
     final resolver = _PendingResolver();
     Wiring.instance.destinationResolver = resolver;
 
@@ -92,13 +92,13 @@ void main() {
     await tester.enterText(find.byType(TextField), 'I need some snacks');
     await tester.tap(find.widgetWithText(ElevatedButton, 'Submit'));
     await tester.pump();
-    expect(find.text('Thinking...'), findsOneWidget);
-    expect(find.text('On-device AI is matching your words to a marked place.'), findsOneWidget);
+    expect(find.text('Thinking...'), findsNothing);
+    expect(find.text('Basic matching'), findsOneWidget);
     expect(tester.takeException(), isNull);
 
     resolver.completer.complete(null);
     await tester.pump();
-    expect(find.text("Didn't catch that, pick from the list"), findsOneWidget);
+    expect(find.text("No match. Pick from the list"), findsOneWidget);
     expect(tester.takeException(), isNull);
   });
 

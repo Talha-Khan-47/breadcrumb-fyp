@@ -15,7 +15,7 @@ MapGraph demoLoop() {
     name: 'Final demo v2',
     start: 'p0',
     places: [
-      n('p0', 'team groza table', PlaceKind.start),
+      n('p0', 'project lab table', PlaceKind.start),
       n('j1', 'Junction 1', PlaceKind.junction),
       n('p1', 'gaming room', PlaceKind.place),
       n('p2', 'food court', PlaceKind.place),

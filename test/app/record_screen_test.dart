@@ -584,7 +584,7 @@ void main() {
   });
 
   for (final full in [true, false]) {
-    testWidgets('D30: Mark place stores suggested aliases on save '
+    testWidgets('D30: Mark place skips suggested aliases on save '
         '(${full ? 'full' : 'basic'} tier)', (tester) async {
       final events = StreamController<Object>.broadcast(sync: true);
       addTearDown(events.close);
@@ -613,7 +613,7 @@ void main() {
       await tester.pumpAndSettle();
       await tap(tester, 'record-stop');
       final cafe = saved!.places.firstWhere((p) => p.name == 'Cafe');
-      expect(cafe.aliases, full ? ['coffee', 'chai'] : isEmpty);
+      expect(cafe.aliases, isEmpty);
     });
   }
 }

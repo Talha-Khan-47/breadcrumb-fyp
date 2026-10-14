@@ -1,11 +1,13 @@
 # Benchmarks
 
+Historical experiments with retained optional code. The FYP release disables on-device language-model loading and generated aliases; these results are not claims about this release.
+
 Measured on the phone, never estimated. Newest run at the top.
 
-## AI tiers and generated aliases (D30) on the iQOO 15, Sun 11 Oct 00:40
+## AI tiers and generated aliases (D30) on the test phone 15, Sun 11 Oct 00:40
 
 **Setup:** branch `ifzal/ai-tier`, debug APK of `lib/ai/debug_main.dart` with
-`--dart-define=BENCH=tiers`, iQOO I2501 (15.6 GB RAM, so `DeviceTier.full`). Gemma 4 E2B
+`--dart-define=BENCH=tiers`, test phone I2501 (15.6 GB RAM, so `DeviceTier.full`). Gemma 4 E2B
 on GPU: load 2671 ms + warm-up 465 ms. Aeroplane mode was off, but nothing in the path
 uses the network.
 
@@ -70,7 +72,7 @@ adb logcat -s flutter | grep BENCH
 The debug APK replaces the main app (same package); reinstall it afterwards with
 `flutter build apk --debug` and `adb install -r`.
 
-## Destination resolving on the iQOO 15, Sat 10 Oct 04:20
+## Destination resolving on the test phone 15, Sat 10 Oct 04:20
 
 **Setup:** branch `ifzal/voice`, debug APK of `lib/ai/debug_main.dart` built with
 `--dart-define=BENCH=both`. Gemma 4 E2B (`.litertlm`, D18 path) on flutter_edge_ai
@@ -136,7 +138,7 @@ what is installed. Spoken test 1 (Ifzal): both buttons stopped after a moment, o
 "Listening" and stopped after 2-3 s without hearing anything. Logcat with the new `SPEECH`
 event log, en-IN and hi-IN: `listening` -> `notListening` -> `done` ->
 `error_language_unavailable (permanent)` within 25-100 ms, so neither pack is installed
-on the iQOO. The old code also lost that error (it came after `done`), and a 2 s
+on the test phone. The old code also lost that error (it came after `done`), and a 2 s
 `pauseFor` that speech_to_text counts from the tap would cut off anyone slower than 2 s
 to start speaking. Both are fixed in `lib/ai/speech_input.dart`; the packs must be
 downloaded on the phone once (Settings > On-device speech recognition). Spoken test 2:
