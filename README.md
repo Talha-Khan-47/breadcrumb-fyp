@@ -1,10 +1,10 @@
-# RAIN: Risk-Aware Indoor Navigation
+# RAIN: Risk-Aware Indoor Navigation 
 
 RAIN is a final-year project that addresses indoor wayfinding in buildings with limited navigation infrastructure. Its implemented core is an offline Android application that records walking routes, saves named places and guides users along those recorded routes.
 
 The submitted application uses shortest-path planning with confidence checks, position confirmation and off-route recovery. Learned risk-based route selection and other research extensions are planned modules.
 
-## The problem
+## The problem. 
 
 GPS is unreliable inside buildings. Students, visitors and other users may need to find rooms and return to familiar places without internet access, installed beacons or an existing digital map.
 
